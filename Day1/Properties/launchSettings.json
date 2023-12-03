@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "Day1": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\kzucha\\Documents\\AOC\\AOC2023\\Day1"
+    }
+  }
+}
