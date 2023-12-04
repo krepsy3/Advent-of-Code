@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
+namespace Day4;
+
 public class Program
 {
     static void Main(string[] args)
