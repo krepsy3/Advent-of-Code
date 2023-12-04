@@ -1,10 +1,6 @@
 {
   "profiles": {
-    "WSL": {
-      "commandName": "WSL2",
-      "distributionName": ""
-    },
-    "Day1": {
+    "Day4": {
       "commandName": "Project",
       "workingDirectory": "$(ProjectDir)"
     }
