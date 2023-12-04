@@ -59,7 +59,7 @@ public class Program
 
 public record class ScratchCard(int id, List<int> winnings, List<int> containing)
 {
-    public static readonly Regex CardRegex = new Regex("Card *(?<id>[0-9]+): (?<winnings>( |[0-9])+)\\| (?<containing>( |[0-9])+)");
+    public static readonly Regex CardRegex = new Regex("Card *(?<id>[0-9]+): (?<winnings>[0-9 ]+)\\| (?<containing>[0-9 ]+)");
 
     public static ScratchCard FromString(string input)
     {
