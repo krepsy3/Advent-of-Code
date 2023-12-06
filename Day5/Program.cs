@@ -3,14 +3,17 @@ using System.Text.RegularExpressions;
 
 namespace Day5;
 
+using longrange = (long begin, long width);
+
 public class Program
 {
     static void Main(string[] args)
     {
         Almanach input = ParseInput();
 
-        Task1(input);
-        Task2(input);
+        //Task1(input);
+        //Task2(input);
+        Task2_1(input);
     }
 
     static void Task1(Almanach almanach)
@@ -58,6 +61,23 @@ public class Program
                 }
             }
         }
+
+        Console.WriteLine(result);
+    }
+
+    static void Task2_1(Almanach almanach)
+    {
+        long result = long.MaxValue;
+
+        List<longrange> seeds = new List<longrange>();
+        for (int i = 0; i < almanach.Seeds.Count; i += 2)
+        {
+            seeds.Add((almanach.Seeds[i], almanach.Seeds[i + 1]));
+        }
+
+        seeds.Sort((r1, r2) => r1.begin.CompareTo(r2.begin));
+
+
 
         Console.WriteLine(result);
     }
@@ -185,6 +205,7 @@ public class Conversion
             m = LineRegex.Match(lines.Current);
         }
 
+        result.Ranges.Sort((r1, r2) => r1.source.CompareTo(r2.source));
         return result;
     }
 
@@ -199,5 +220,16 @@ public class Conversion
         }
 
         return num;
+    }
+
+    public List<longrange> Conv(IList<longrange> sortedValues)
+    {
+        var result = new List<longrange>();
+        foreach (var value in sortedValues)
+        {
+            
+        }
+
+        return result;
     }
 }
