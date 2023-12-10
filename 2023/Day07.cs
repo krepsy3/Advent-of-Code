@@ -1,6 +1,6 @@
 ﻿using Common;
 
-namespace AoC2023.Day7;
+namespace AoC2023.Day07;
 
 public class AdvTask : AdventTask
 {

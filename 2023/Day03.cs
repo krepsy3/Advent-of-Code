@@ -1,7 +1,7 @@
 ﻿using Common;
 using System.Text.RegularExpressions;
 
-namespace AoC2023.Day3;
+namespace AoC2023.Day03;
 
 public class AdvTask : AdventTask
 {

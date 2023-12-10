@@ -42,7 +42,7 @@ public class Program
 
     static AdventTask? GetTask(int day)
     {
-        var type = typeof(Program).Assembly.GetType($"AoC2023.Day{day}.AdvTask");
+        var type = typeof(Program).Assembly.GetType($"AoC2023.Day{day:00}.AdvTask");
         if (type is null)
         {
             return null;

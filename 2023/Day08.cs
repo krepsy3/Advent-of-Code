@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace AoC2023.Day8;
+namespace AoC2023.Day08;
 
 public class AdvTask : AdventTask
 {

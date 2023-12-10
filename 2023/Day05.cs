@@ -1,6 +1,6 @@
 ﻿using Common;
 
-namespace AoC2023.Day5;
+namespace AoC2023.Day05;
 public class AdvTask : AdventTask
 {
     public override void DoTask(InputLoader loader)

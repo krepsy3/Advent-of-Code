@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AoC2023.Day6;
+namespace AoC2023.Day06;
 
 public class AdvTask : AdventTask
 {

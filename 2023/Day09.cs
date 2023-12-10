@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AoC2023.Day9;
+namespace AoC2023.Day09;
 
 public class AdvTask : AdventTask
 {
