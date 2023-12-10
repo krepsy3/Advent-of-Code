@@ -1,25 +1,30 @@
-﻿using System.Text.RegularExpressions;
+﻿using Common;
+using System.Text.RegularExpressions;
 
-namespace Day4;
+namespace AoC2023.Day4;
 
-public class Program
+public class AdvTask : AdventTask
 {
-    static void Main(string[] args)
+    public override void DoTask(InputLoader loader)
     {
-        Task1();
-        Task2();
+        string? line;
+        var cards = new List<ScratchCard>();
+        while ((line = loader.GetNextLine()) is not null)
+        {
+            cards.Add(ScratchCard.FromString(line));
+        }
+
+        loader.EndLoading();
+
+        Task1(cards);
+        Task2(cards);
     }
 
-    static void Task1()
+    void Task1(IEnumerable<ScratchCard> cards)
     {
-        using var sr = new StreamReader("input.txt");
-        string? input = null;
-
         int result = 0;
-
-        while ((input = sr.ReadLine()) is not null)
-        {
-            var c = ScratchCard.FromString(input);
+        foreach (ScratchCard c in cards)
+        { 
             int cresult = c.GetWincount();
 
             if (cresult > 0)
@@ -31,18 +36,8 @@ public class Program
         Console.WriteLine(result);
     }
 
-    static void Task2()
+    void Task2(IList<ScratchCard> cards)
     {
-        using var sr = new StreamReader("input.txt");
-        string? input = null;
-
-        List<ScratchCard> cards = new List<ScratchCard>();
-
-        while ((input = sr.ReadLine()) is not null)
-        {
-            cards.Add(ScratchCard.FromString(input));
-        }
-
         int[] cardCounts = Enumerable.Repeat(1, cards.Count).ToArray();
 
         for (int i = 0; i < cards.Count; i++)

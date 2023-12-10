@@ -363,4 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 #My input copied from advent of code website
-input.txt
+**/Inputs/*.txt
+!**/Inputs/

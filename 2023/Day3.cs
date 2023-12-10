@@ -1,53 +1,50 @@
-﻿using System.Text.RegularExpressions;
+﻿using Common;
+using System.Text.RegularExpressions;
 
-namespace Day3;
+namespace AoC2023.Day3;
 
-public class Program
+public class AdvTask : AdventTask
 {
-    static void Main(string[] args)
+    public override void DoTask(InputLoader loader)
     {
-        Task1();
-        Task2();
+        DoTask(loader, ProcessLine1);
+        loader.Reset();
+        DoTask(loader, ProcessLine2);
+        loader.EndLoading();
     }
-
 
     static readonly Regex numRegex = new Regex("[0-9]+");
     static readonly string nonPartChars = ".0123456789";
     static readonly string numChars = "0123456789";
 
-
-    static void Task(Func<string, string, string, int> processingFunction)
+    void DoTask(InputLoader loader, Func<string, string, string, int> lineProcessor)
     {
-        using var sr = new StreamReader("input.txt");
-        string? input = null;
-
-        string prevline = "";
-        string nextline = sr.ReadLine()!;
-        string emptyline = new string('.', nextline.Length), line = emptyline;
+        string? input;
+        string prevline;
+        string nextline = loader.GetNextLine()!;
+        string emptyline = new string('.', nextline.Length);
+        string line = emptyline;
 
         int result = 0;
 
-        while ((input = sr.ReadLine()) is not null)
+        while ((input = loader.GetNextLine()) is not null)
         {
             prevline = line;
             line = nextline;
             nextline = input;
-            result += processingFunction(line, prevline, nextline);
+            result += lineProcessor(line, prevline, nextline);
         }
 
         prevline = line;
         line = nextline;
         nextline = emptyline;
-        result += processingFunction(line, prevline, nextline);
+        result += lineProcessor(line, prevline, nextline);
 
         Console.WriteLine(result);
     }
 
 
-    static void Task1()
-        => Task(ProcessTask1Line);
-
-    static int ProcessTask1Line(string line, string prev, string next)
+    int ProcessLine1(string line, string prev, string next)
     {
         int result = 0;
         var matches = numRegex.Matches(line);
@@ -59,7 +56,7 @@ public class Program
             }
 
             int
-                left  = Math.Max(match.Index - 1, 0),
+                left = Math.Max(match.Index - 1, 0),
                 right = Math.Min(match.Index + match.Length, line.Length - 1);
 
             if (IsEnginePart(prev, line, next, left, right))
@@ -71,7 +68,7 @@ public class Program
         return result;
     }
 
-    static bool IsEnginePart(string topline, string line, string botline, int leftIndex, int rightIndex)
+    bool IsEnginePart(string topline, string line, string botline, int leftIndex, int rightIndex)
     {
         if (nonPartChars.IndexOf(line[leftIndex]) < 0)
         {
@@ -97,10 +94,7 @@ public class Program
     }
 
 
-    static void Task2()
-        => Task(ProcessTask2Line);
-
-    static int ProcessTask2Line(string line, string prev, string next)
+    int ProcessLine2(string line, string prev, string next)
     {
         int result = 0;
 
@@ -121,9 +115,9 @@ public class Program
         return result;
     }
 
-    static IEnumerable<int> GetNumbersAround(string topline, string line, string botline, int index)
+    IEnumerable<int> GetNumbersAround(string topline, string line, string botline, int index)
     {
-        foreach(var n in GetNumbersAroundInLine(topline, index))
+        foreach (var n in GetNumbersAroundInLine(topline, index))
         {
             yield return n;
         }
@@ -146,7 +140,7 @@ public class Program
         }
     }
 
-    static IEnumerable<int> GetNumbersAroundInLine(string line, int index)
+    IEnumerable<int> GetNumbersAroundInLine(string line, int index)
     {
         int leftindex = Math.Max(index - 1, 0);
         int rightindex = Math.Min(index + 1, line.Length - 1);
@@ -180,7 +174,7 @@ public class Program
         }
     }
 
-    static int GetNumberToLeft(string text, int rightIndex)
+    int GetNumberToLeft(string text, int rightIndex)
     {
         int result = text[rightIndex] - '0';
         int coeff = 10;
@@ -198,7 +192,7 @@ public class Program
         return result;
     }
 
-    static int GetNumberToRight(string text, int leftIndex)
+    int GetNumberToRight(string text, int leftIndex)
     {
         int result = text[leftIndex] - '0';
         for (int i = leftIndex + 1; i < text.Length; i++)

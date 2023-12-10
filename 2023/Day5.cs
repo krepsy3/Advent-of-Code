@@ -1,10 +1,15 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using Common;
 
-namespace Day5;
+namespace AoC2023.Day5;
+public class AdvTask : AdventTask
+{
+    public override void DoTask(InputLoader loader)
+    {
+        Console.WriteLine("TODO...");
+    }
+}
 
-using longrange = (long begin, long width);
-
+/*
 public class Program
 {
     static void Main(string[] args)
@@ -227,9 +232,10 @@ public class Conversion
         var result = new List<longrange>();
         foreach (var value in sortedValues)
         {
-            
+
         }
 
         return result;
     }
 }
+*/
