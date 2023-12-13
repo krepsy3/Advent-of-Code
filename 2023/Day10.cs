@@ -3,6 +3,7 @@
 namespace AoC2023.Day10;
 
 using tile = (int x, int y);
+using Dir = Pipeline.Direction;
 
 enum TileType { None = 0, LoopBlock, Grouped, Enclosed, Out }
 
@@ -29,7 +30,7 @@ public class AdvTask : AdventTask
 
         result[sx, sy] = TileType.LoopBlock;
 
-        var steps = new List<(int, int, int, Pipeline.Direction)>();
+        var steps = new List<(int, int, int, Dir)>();
         foreach (var cd in Pipeline.CardinalDirections)
         {
             if ((initDir & cd) > 0)
@@ -44,13 +45,13 @@ public class AdvTask : AdventTask
         {
             for (int i = 0; i < steps.Count; i++)
             {
-                (int x, int y, int last, Pipeline.Direction dir) = steps[i];
+                (int x, int y, int last, Dir dir) = steps[i];
                 (int nx, int ny) = dir switch
                 {
-                    Pipeline.Direction.Up => (x, y - 1),
-                    Pipeline.Direction.Down => (x, y + 1),
-                    Pipeline.Direction.Left => (x - 1, y),
-                    Pipeline.Direction.Right => (x + 1, y),
+                    Dir.Up => (x, y - 1),
+                    Dir.Down => (x, y + 1),
+                    Dir.Left => (x - 1, y),
+                    Dir.Right => (x + 1, y),
                     _ => (x, y)
                 };
 
@@ -79,7 +80,7 @@ public class AdvTask : AdventTask
         return result;
     }
 
-    Pipeline.Direction ProcessField(int x, int y, Pipeline pipeline, ref int[,] lengths, int last, Pipeline.Direction from)
+    Dir ProcessField(int x, int y, Pipeline pipeline, ref int[,] lengths, int last, Dir from)
     {
         if (lengths[x, y] != 0)
         {
@@ -119,8 +120,53 @@ public class AdvTask : AdventTask
 
         foreach (var group in tileGroups)
         {
-
+            tile target = GetTileClosestToEdge(group, map.GetLength(0), map.GetLength(1));
+            var filler = FindOddEvenFillState(target, map, pipeline.pipeMap) ? TileType.Enclosed : TileType.Out;
+          
+            foreach (var t in group)
+            {
+                map[t.x, t.y] = filler;
+            }
         }
+
+        int total = 0;
+
+        for (int y = 0; y < map.GetLength(1) ;y++)
+        {
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                char c = map[x, y] switch
+                {
+                    TileType.Enclosed => '■',
+                    TileType.Out => ' ',
+                    _ => 'X',
+                };
+
+                if (map[x, y] == TileType.Enclosed)
+                {
+                    total++;
+                }
+
+                if (map[x, y] == TileType.LoopBlock)
+                {
+                    c = pipeline.pipeMap[x, y] switch
+                    {
+                        Dir.HYPHEN => '─',
+                        Dir.DVERT => '│',
+                        Dir.F => '┌',
+                        Dir.SEVEN => '┐',
+                        Dir.L => '└',
+                        Dir.J => '┘',
+                    };
+                }
+
+                Console.Write(c);
+            }
+
+            Console.WriteLine();
+        }
+
+        Console.WriteLine(total);
     }
 
     List<tile> GroupNeighbours(ref TileType[,] map, int x, int y)
@@ -168,6 +214,61 @@ public class AdvTask : AdventTask
         possibleResults[2] = (tiles.MaxBy(t => t.x), width, true);
         possibleResults[3] = (tiles.MaxBy(t => t.y), height, false);
         return possibleResults.MinBy(tr => tr.s ? tr.c.x : tr.c.y - tr.r).c;
+    }
+
+    bool FindOddEvenFillState(tile target, TileType[,] map, Dir[,] pipemap)
+    {
+        Func<tile, int> selector;
+        Func<tile, tile> advancer;
+        (Dir d, bool seen) cross1, cross2;
+        bool state = false;
+        tile curr;
+
+        if (target.x <= target.y)
+        {
+            selector = t => t.x;
+            advancer = t => (t.x + 1, t.y);
+            cross1 = (Dir.Up, false);
+            cross2 = (Dir.Down, false);
+            curr = (0, target.y);
+        }
+
+        else
+        {
+            selector = t => t.y;
+            advancer = t => (t.x, t.y + 1);
+            cross1 = (Dir.Left, false);
+            cross2 = (Dir.Right, false);
+            curr = (target.x, 0);
+        }
+
+        while (selector(curr) < selector(target))
+        {
+            if (map[curr.x, curr.y] == TileType.LoopBlock)
+            {
+                Dir block = pipemap[curr.x, curr.y];
+                if (block.HasFlag(cross1.d))
+                {
+                    cross1.seen = !cross1.seen;
+                }
+
+                if (block.HasFlag(cross2.d))
+                {
+                    cross2.seen = !cross2.seen;
+                }
+
+                if (cross1.seen && cross2.seen)
+                {
+                    state = !state;
+                    cross1.seen = false;
+                    cross2.seen = false;
+                }
+            }
+
+            curr = advancer(curr);
+        }
+
+        return state;
     }
 
 
